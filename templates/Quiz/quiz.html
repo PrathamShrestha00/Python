@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Rating Quiz</title>
+</head>
+<body>
+    <h1>Guess the Rating!</h1>
+    <h2>Here's a book: {{ book['title'] }}</h2>
+
+    <form action="{{ url_for('submit') }}" method="POST">
+        <p>What is the rating of this book?</p>
+
+        <input type="radio" id="A" name="option" value="{{ options[0] }}">
+        <label for="A">{{ options[0] }} stars</label><br>
+
+        <input type="radio" id="B" name="option" value="{{ options[1] }}">
+        <label for="B">{{ options[1] }} stars</label><br>
+
+        <input type="radio" id="C" name="option" value="{{ options[2] }}">
+        <label for="C">{{ options[2] }} stars</label><br>
+
+        <input type="radio" id="D" name="option" value="{{ options[3] }}">
+        <label for="D">{{ options[3] }} stars</label><br>
+
+        <input type="hidden" name="book_title" value="{{ book['title'] }}">
+        <input type="hidden" name="book_rating" value="{{ book['rating'] }}">
+
+        <button type="submit">Submit Answer</button>
+    </form>
+</body>
+</html>
