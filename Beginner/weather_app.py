@@ -1,41 +1,44 @@
+import os
 import requests
 from dotenv import load_dotenv
-import os
 
-# Load environment variables from .env file
+# Load environment variables from the .env file
 load_dotenv()
-# Function to get weather data from OpenWeatherMap API
-def get_weather(city_name, api_key):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units=metric"
-    response = requests.get(url)
-    return response.json()
 
-# Function to display weather information
-def display_weather(weather_data):
-    if weather_data["cod"] == "404":
-        print("City not found!")
+# Get the API URL and API key from environment variables
+API_URL = os.getenv('API_URL')
+API_KEY = os.getenv('WEATHER_API_KEY')
+
+
+def get_weather(city):
+    """Fetch weather data from the API."""
+    if API_URL and API_KEY:
+        # Make an API request using the stored URL and API key
+        url = f"{API_URL}?q={city}&appid={API_KEY}&units=metric"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            name = data.get('name')
+            temp = data.get('main', {}).get('temp')
+            pressure = data.get('main', {}).get('pressure')
+            humidity = data.get('main', {}).get('humidity')
+
+            print(f"City: {name}")
+            print(f"Temperature: {temp}°C")
+            print(f"Pressure: {pressure} hPa")
+            print(f"Humidity: {humidity}%")
+        else:
+            print("City not found or an error occurred.")
     else:
-        city = weather_data["name"]
-        main = weather_data["main"]
-        temperature = main["temp"]
-        pressure = main["pressure"]
-        humidity = main["humidity"]
-        weather_desc = weather_data["weather"][0]["description"]
-        print(f"Weather Information for {city}:")
-        print(f"Temperature: {temperature}°C")
-        print(f"Pressure: {pressure} hPa")
-        print(f"Humidity: {humidity}%")
-        print(f"Weather Description: {weather_desc}")
+        print("API URL or API key is missing.")
 
-# Main function to run the app
+
 def main():
-    print("Weather App")
-    city_name = input("Enter city name: ")
-    api_key = os.getenv('WEATHER_API_KEY')
-    weather_data = get_weather(city_name, api_key)
-    display_weather(weather_data)
+    """Main function to run the weather app."""
+    city = input("Enter city name: ").strip()
+    get_weather(city)
 
-# Run the app
+
 if __name__ == "__main__":
     main()
-
